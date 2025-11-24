@@ -22,6 +22,7 @@ public class Resource {
     private ResourceType type;
 
     @Column(nullable = false)
+    @Builder.Default
     private Double quantity = 0.0;
 
     @Column(nullable = false)
@@ -31,6 +32,7 @@ public class Resource {
     @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
     
 }

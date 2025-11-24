@@ -2,8 +2,6 @@ package project.frontier.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import project.frontier.entity.enums.MissionStatus;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -35,5 +33,6 @@ public class Experiment{
     @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

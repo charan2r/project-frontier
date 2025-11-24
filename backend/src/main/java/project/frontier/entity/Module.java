@@ -27,9 +27,13 @@ public class Module {
     private ModuleType type;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private ModuleStatus status = ModuleStatus.ONLINE;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToOne

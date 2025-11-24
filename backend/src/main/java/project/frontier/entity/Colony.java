@@ -25,9 +25,16 @@ public class Colony {
     @Column(nullable = false)
     private String location;
 
+    @Builder.Default
     private int population=0;
+
+    @Builder.Default
     private LocalDate establishedDate = LocalDate.now();
+
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
     
     @ManyToOne

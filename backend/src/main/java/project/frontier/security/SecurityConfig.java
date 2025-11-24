@@ -26,17 +26,17 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                // public endpoints
-                                .requestMatchers("/auth/**").permitAll()
-
+                                // public  endpoints
+                                .requestMatchers("/health").permitAll()
+                                
+                                // profile endpoint
+                                .requestMatchers("/auth/profile").authenticated()
+                                
                                 // admin APIs
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-
-                                // scientist APIs
-                                .requestMatchers("/scientist/**").hasAnyRole("ADMIN", "SCIENTIST")
-
+                                
                                 // colonist APIs
-                                .requestMatchers("/colonist/**").hasAnyRole("COLONIST", "ADMIN", "SCIENTIST")
+                                .requestMatchers("/colonist/**").hasAnyRole("COLONIST", "ADMIN")
 
                                 // everything else requires login
                                 .anyRequest().authenticated()

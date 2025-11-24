@@ -25,6 +25,7 @@ public class Mission {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private MissionStatus status = MissionStatus.PLANNED;
 
     private LocalDate startDate;
@@ -34,7 +35,10 @@ public class Mission {
     @JoinColumn(name = "colony_id", nullable = false)
     private Colony colony;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
     
 }

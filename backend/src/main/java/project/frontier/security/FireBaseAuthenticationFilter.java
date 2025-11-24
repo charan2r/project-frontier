@@ -8,7 +8,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import project.frontier.entity.User;
-import project.frontier.entity.enums.UserRole;
 import project.frontier.repository.UserRepository;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,25 +50,41 @@ public class FireBaseAuthenticationFilter extends OncePerRequestFilter {
             User user = userRepository.findByFirebaseUid(firebaseUid)
                     .orElse(null);
 
-            if(user==null){
-                String name = decodedToken.getName();
-                if(name == null || name.trim().isEmpty()) {
-                    name = email.split("@")[0]; 
+           if(user == null){
+                String displayName = decodedToken.getName();
+                String firstName = null;
+                String lastName = null;
+
+                // Split display name if present
+                if(displayName != null && !displayName.trim().isEmpty()) {
+                    String[] parts = displayName.trim().split(" ", 2);
+                    firstName = parts[0];
+                    if(parts.length > 1) {
+                        lastName = parts[1];
+                    }
+                } else {
+                    firstName = email.split("@")[0];
                 }
-                
+
+                String fullName = firstName;
+                if (lastName != null) {
+                    fullName = firstName + " " + lastName;
+                }
+
                 User newUser = User.builder()
                         .firebaseUid(firebaseUid)
                         .email(email)
-                        .name(name)
-                        .role(UserRole.COLONIST)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .name(fullName)
                         .build();
+
                 user = userRepository.save(newUser);
             }
 
             UsernamePasswordAuthenticationToken authentication = 
                     new UsernamePasswordAuthenticationToken(user, null, 
                             Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())));
-
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }catch (FirebaseAuthException e) {
@@ -78,8 +93,5 @@ public class FireBaseAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-
-
-        
     }
 }
